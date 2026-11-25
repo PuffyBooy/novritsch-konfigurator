@@ -45,7 +45,7 @@ button{cursor:pointer}
 .chip[aria-pressed=true]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:22px;padding:8px max(5vw,16px) 30px;max-width:1300px;margin:0 auto}
 .card{background:var(--card);border:1px solid var(--line);display:flex;flex-direction:column}
-.card .img{aspect-ratio:16/10;height:auto;background:#f2f2f2;display:block;width:100%;object-fit:cover}
+.card .img{aspect-ratio:16/10;height:auto;background:#fff;display:block;width:100%;object-fit:cover}
 .card .body{padding:18px 20px 20px;display:flex;flex-direction:column;gap:10px;flex:1}
 .series{font:600 12px Poppins;color:var(--red2);text-transform:uppercase}
 .card h2{font-size:26px;text-transform:uppercase}
@@ -86,13 +86,16 @@ button{cursor:pointer}
 .panel h2{font-size:26px;text-transform:uppercase}
 .panel .lead{color:var(--mute);font-size:15px;margin:6px 0 16px}
 .opts{display:flex;flex-direction:column;gap:8px}
-.opt{display:grid;grid-template-columns:22px minmax(0,1fr) auto;gap:4px 12px;align-items:start;text-align:left;padding:14px 14px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.opt{display:grid;grid-template-columns:22px 64px minmax(0,1fr) auto;gap:4px 12px;align-items:center;text-align:left;padding:14px 14px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
 .opt:hover{border-color:var(--mute)}
 .opt .dot{width:20px;height:20px;border:2px solid var(--mute);border-radius:50%;margin-top:2px}
 .opt[aria-pressed=true]{border-color:var(--ink);box-shadow:inset 3px 0 0 var(--red)}
 .opt[aria-pressed=true] .dot{border-color:var(--red);background:radial-gradient(circle,var(--red) 45%,transparent 50%)}
 .opt b{font:600 15px Poppins}.opt .pr{font:600 14px Poppins;white-space:nowrap}
-.opt small{grid-column:2/4;color:var(--mute);font-size:13.5px}
+.opt .tx{display:flex;flex-direction:column;gap:2px}.opt small{color:var(--mute);font-size:13.5px}
+.th{width:64px;height:64px;object-fit:contain;background:#fff;border:1px solid var(--line);display:block}
+.th.std{display:grid;place-items:center;font:600 12px Poppins;color:var(--mute);text-transform:uppercase;background:var(--soft)}
+.th.sm{width:44px;height:44px;flex:none}
 .note{font-size:13.5px;color:var(--mute);margin:14px 0 0;padding-left:12px;border-left:2px solid var(--line)}
 .stepper{display:flex;align-items:center;gap:10px;margin-top:16px;padding:12px 14px;background:var(--soft)}
 .stepper span{flex:1;font-size:14px}
@@ -100,8 +103,8 @@ button{cursor:pointer}
 .stepper b{font:600 18px Poppins;width:2ch;text-align:center}
 .sum ul{list-style:none;padding:0;margin:8px 0 0}
 .sum h3{font:600 13px Poppins;text-transform:uppercase;color:var(--mute);margin-top:18px}
-.sum li{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);font-size:15px}
-.sum li a{color:var(--ink)}.sum li b{font:600 14px Poppins;white-space:nowrap}
+.sum li{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:15px}
+.sum li a{color:var(--ink);flex:1}.sum li b{font:600 14px Poppins;white-space:nowrap}
 .sum .tot{display:flex;justify-content:space-between;align-items:baseline;margin-top:16px}
 .sum .tot b{font:700 30px Poppins;white-space:nowrap}
 .codeline{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--soft);padding:12px 14px;margin-top:18px}
@@ -123,7 +126,7 @@ footer a{color:var(--ink)}
  .steps{margin-left:0;width:100%;order:3}.cbar{padding-bottom:0;top:58px}
  .wide{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:960px){.cgrid{height:auto}}
-@media(max-width:600px){.tag{display:none}.specs b{font-size:14px}.hint{display:none}
+@media(max-width:600px){.opt{grid-template-columns:20px 52px minmax(0,1fr);}.opt .pr{grid-column:3}.th{width:52px;height:52px}.tag{display:none}.specs b{font-size:14px}.hint{display:none}
  .steps button{padding:0 9px}.steps button:not([aria-current]) .t{display:none}
  .views button{flex:none}.views{flex-wrap:nowrap;overflow-x:auto;max-width:calc(100vw - 150px);scrollbar-width:none}.views button,#spin{min-height:38px;padding:0 10px;font-size:11px}
  .pbar{flex-wrap:nowrap;gap:8px;min-height:68px;padding:10px 12px}.pbar .lbl{display:none}.pbar .tot{font-size:19px}.pbar .btn{padding:0 12px;min-height:44px}
@@ -195,6 +198,13 @@ const el=(tag,cls,txt)=>{const e=document.createElement(tag);if(cls)e.className=
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const eur=v=>v.toLocaleString('de-AT',{style:'currency',currency:'EUR'});
 const shop=n=>'https://eu.novritsch.com/?s='+encodeURIComponent(n)+'&post_type=product';
+const P='https://eu.novritsch.com/product/';
+const URLS={ssg11:'ssg11-airsoft-sniper-rifle/',mk1:'ssr4-automatic-electric-gun-aeg/',mk2:'ssr4-mk2-automatic-electric-gun/',OPT_4x:'4x40-minimal-scope/',OPT_14:'1-4x-variable-scope/',
+ OPT_16:'premium-1-6x-variable-scope-mk2/',OPT_rdv3:'red-dot-v3/',OPT_micro:'red-dot-micro-v2/',MUZ_rifle:'novritsch-suppressor/',MUZ_modv1:'modular-suppressor-v1-2/',
+ MUZ_fast:'fast-attach-suppressor-system/',MUZ_fdv2:'fast-detach-mock-suppressor-v2/',MUZ_comp:'sniper-rifle-compensator/',BIP_v1:'bipod-v1/',BIP_split:'split-bipod/',
+ MAG_long:'ssg11-long-dummy-magazine/',MAG_midcap:'m4-mid-cap-magazine-gen2-225bbs/',ADAPTER:'ssg10-suppressor-adapter/',PACK_ssg11:'ssg11-magazine-58-bbs-triple-pack/',PACK_ssr:'m4-mid-cap-magazine-gen2-225bbs/'};
+const link=(k,n)=>URLS[k]?P+URLS[k]:shop(n);
+const thumb=(k,cls)=>{const i=el('img',cls||'th');i.alt='';i.width=72;i.height=72;i.decoding='async';const f=k==='ssg11'||k==='mk1'||k==='mk2'?'card_'+k+'.jpg':'p_'+k+'.jpg';loadImg(f).then(u=>{if(u)i.src=u;else i.style.visibility='hidden'});return i};
 
 // ---------- Katalog (Richtpreise EU-Shop, Stand 25.11.2026)
 const PART={
@@ -222,7 +232,7 @@ const SSG_SLOTS=[
  {key:'bipod',title:'Zweibein',sub:'Unter dem Vorderschaft',none:['Kein Zweibein',''],from:[0,-0.10,0],ids:['BIP_v1','BIP_split'],view:'q34',
   note:'Bipod V1 sitzt am Riemenbügel/QD-Punkt, das Split Bipod mit zwei Einzelbeinen seitlich.'},
  {key:'mag',title:'Magazin',sub:'58 BBs, doppelreihig',none:['Standardmagazin','58 BBs, im Lieferumfang.'],from:[0,-0.08,0],ids:['MAG_long'],view:'side',
-  packs:['SSG11 Magazin (58 BBs) – 3er-Pack',32.50,'Ersatzmagazine, 3er-Pack'],note:'Ersatzmagazine kannst du unten dazunehmen.'}];
+  packs:['SSG11 Magazin (58 BBs) – 3er-Pack',32.50,'Ersatzmagazine, 3er-Pack','PACK_ssg11'],note:'Ersatzmagazine kannst du unten dazunehmen.'}];
 const ssrSlots=(std,mag)=>[
  {key:'optic',title:'Optik',sub:'Picatinny auf dem Upper',none:['Keine Optik','Offene Schiene.'],from:[0,0.10,0],ids:['OPT_rdv3','OPT_micro','OPT_14','OPT_16'],view:'optic',
   note:'Red Dots und LPVOs, wie sie für die SSR4 angeboten werden.'},
@@ -231,8 +241,8 @@ const ssrSlots=(std,mag)=>[
  {key:'bipod',title:'Zweibein',sub:'M-LOK am Handschutz',none:['Kein Zweibein',''],from:[0,-0.10,0],ids:['BIP_split'],view:'q34',
   note:'Das Split Bipod wird mit zwei Einzelbeinen vorne seitlich in die M-LOK-Schlitze geschraubt.'},
  {key:'mag',title:'Magazin',sub:mag.sub,none:[mag.std,'Im Lieferumfang.'],from:[0,-0.08,0],ids:mag.ids,view:'side',
-  packs:['M4 Mid-Cap Magazine Gen2 (225 BBs)',19,'Ersatzmagazine (Mid-Cap)'],note:mag.note}];
-const MK1F=['SSR4_Mk1_1.json','SSR4_Mk1_2.json','SSR4_Mk1_3.json'],MK2F=['SSR4_Mk2_1.json','SSR4_Mk2_2.json','SSR4_Mk2_3.json'];
+  packs:['M4 Mid-Cap Magazine Gen2 (225 BBs)',19,'Ersatzmagazine (Mid-Cap)','PACK_ssr'],note:mag.note}];
+const MK1F=[1,2,3,4].map(i=>`SSR4_Mk1_${i}.json`),MK2F=[1,2,3,4].map(i=>`SSR4_Mk2_${i}.json`);
 const MODELS={
  ssg11:{n:'SSG11',series:'Sniper',f:'sniper',img:'card_ssg11.jpg',files:['ssg11.json'],floor:-0.182,price:['SSG11 Sniper Rifle',287.20,1],side:1,slots:SSG_SLOTS,
   specs:[['Typ','Repetierer'],['Magazin','58 BBs'],['Gewinde','28 mm CCW']],
@@ -250,7 +260,7 @@ const MODELS={
   off:{optic:[-0.10125,0.00665],muzzle:[-0.26214,0.000657],bipod:[-0.04368,0.02064]},
   hide:{muzzle:/^Mk2Comp/},anch:{optic:[-0.03,0.06],muzzle:[0.36,0],detail:[0.0,-0.04]},
   def:{optic:'OPT_rdv3',muzzle:'none',bipod:'none',mag:'none',packs:0}},
- cmp:{n:'SSR4 Mk1 vs. Mk2',files:[...MK1F,...MK2F],offs:[0.17,0.17,0.17,-0.17,-0.17,-0.17],floor:-0.37,side:-1,slots:[],off:{},hide:{},anch:{}}};
+ cmp:{n:'SSR4 Mk1 vs. Mk2',files:[...MK1F,...MK2F],offs:[...MK1F.map(()=>0.17),...MK2F.map(()=>-0.17)],floor:-0.37,side:-1,slots:[],off:{},hide:{},anch:{}}};
 const ORDER=['ssg11','mk1','mk2'];
 const ADAPTER=['SSG10/11 Mock Suppressor Adapter',13];
 const CMP=[['Länge','74 cm (eingeschoben)','73 cm eingeschoben / 81,5 cm ausgezogen'],['Gewicht','2,3 kg','2,38 kg'],
@@ -281,11 +291,11 @@ function decode(code){code=(code||'').toUpperCase().replace(/[^0-9A-Z]/g,'');if(
  for(let i=0;i<4;i++){const ids=['none',...M.slots[i].ids];if(d[i+1]>=ids.length)return null;cfg[M.slots[i].key]=ids[d[i+1]]}return {m,cfg}}
 
 // ---------- Preise
-function lines(m){const M=MODELS[m];if(m==='cmp')return [[...MODELS.mk1.price,'base'],[...MODELS.mk2.price,'base']];
- const cfg=S.cfg[m],L=[[M.price[0],M.price[1],M.price[2],'base']];
- for(const sl of M.slots){const id=cfg[sl.key];if(id&&id!=='none'){const [n,p,f]=PART[id];L.push([n,p,f,'opt'])}}
- if(M.adapter&&cfg.muzzle!=='none')L.push([ADAPTER[0],ADAPTER[1],0,'req']);
- const pk=M.slots.find(s=>s.packs);if(pk&&cfg.packs)L.push([pk.packs[0]+(cfg.packs>1?' × '+cfg.packs:''),pk.packs[1]*cfg.packs,0,'opt']);return L}
+function lines(m){const M=MODELS[m];if(m==='cmp')return [[...MODELS.mk1.price,'base','mk1'],[...MODELS.mk2.price,'base','mk2']];
+ const cfg=S.cfg[m],L=[[M.price[0],M.price[1],M.price[2],'base',m]];
+ for(const sl of M.slots){const id=cfg[sl.key];if(id&&id!=='none'){const [n,p,f]=PART[id];L.push([n,p,f,'opt',id])}}
+ if(M.adapter&&cfg.muzzle!=='none')L.push([ADAPTER[0],ADAPTER[1],0,'req','ADAPTER']);
+ const pk=M.slots.find(s=>s.packs);if(pk&&cfg.packs)L.push([pk.packs[0]+(cfg.packs>1?' × '+cfg.packs:''),pk.packs[1]*cfg.packs,0,'opt',pk.packs[3]]);return L}
 const total=L=>(L.some(l=>l[2])?'ab ':'')+eur(L.reduce((a,l)=>a+l[1],0));
 
 // ---------- Modellauswahl
@@ -301,7 +311,7 @@ function renderModels(){const g=$('grid');g.innerHTML='';
   b.append(el('span','series','Vergleich'),el('h2',null,'SSR4 Mk1 oder Mk2?'),
    el('p',null,'Beide Versionen im selben Maßstab übereinander, mit allen Unterschieden an Handschutz, Mündung, Gehäuse und Schaft.'));
   const a=el('div','acts');const go=el('button','btn','Modelle vergleichen');go.dataset.go='cmp';a.append(go);b.append(a);
-  const pics=el('div');pics.style.cssText='display:grid;grid-template-columns:1fr 1fr;background:#f2f2f2';
+  const pics=el('div');pics.style.cssText='display:grid;grid-template-columns:1fr 1fr;background:#fff';
   for(const m of ['mk1','mk2']){const i=el('img','img');i.alt=MODELS[m].n;i.style.aspectRatio='16/10';loadImg(MODELS[m].img).then(u=>{if(u)i.src=u});pics.append(i)}
   w.append(b,pics);g.append(w)}}
 const imgCache={};
@@ -315,8 +325,8 @@ function renderSteps(){const st=stepsOf(S.model);$('steps').innerHTML='';
  $('next').textContent=S.model==='cmp'?'Mk2 konfigurieren':last?'Neu starten':(S.step===st.length-2?'Zur Zusammenfassung':'Weiter')}
 function optButton(sl,id){const cfg=C();const b=el('button','opt');b.type='button';b.dataset.slot=sl.key;b.dataset.id=id;b.setAttribute('aria-pressed',cfg[sl.key]===id);
  b.append(el('span','dot'));
- if(id==='none'){b.append(el('b',null,sl.none[0]),el('span','pr','inklusive'));if(sl.none[1])b.append(el('small',null,sl.none[1]))}
- else{const [n,p,f,d]=PART[id];b.append(el('b',null,n),el('span','pr',(f?'ab ':'')+eur(p)),el('small',null,d))}
+ if(id==='none'){const ph=el('span','th std',S.model==='ssg11'&&sl.key==='optic'?'—':'Std.');b.append(ph);const tx=el('span','tx');tx.append(el('b',null,sl.none[0]));if(sl.none[1])tx.append(el('small',null,sl.none[1]));b.append(tx,el('span','pr','inklusive'))}
+ else{const [n,p,f,d]=PART[id];b.append(thumb(id));const tx=el('span','tx');tx.append(el('b',null,n),el('small',null,d));b.append(tx,el('span','pr',(f?'ab ':'')+eur(p)))}
  return b}
 function renderPanel(){const P=$('panel');P.innerHTML='';const M=MODELS[S.model];
  if(S.model==='cmp'){P.append(el('h2',null,'Mk1 vs. Mk2'),el('p','lead','Oben die Mk1 (Gen2), unten die Mk2 – im selben Maßstab. Technische Daten laut Novritsch-Produktseiten.'));
@@ -325,15 +335,15 @@ function renderPanel(){const P=$('panel');P.innerHTML='';const M=MODELS[S.model]
   const a=el('div','acts');for(const m of ['mk1','mk2']){const b=el('button','btn',MODELS[m].n+' konfigurieren');b.dataset.go=m;a.append(b)}P.append(a);return}
  if(S.step<M.slots.length){const sl=M.slots[S.step];
   P.append(el('h2',null,sl.title),el('p','lead',sl.sub));const o=el('div','opts');for(const id of ['none',...sl.ids])o.append(optButton(sl,id));P.append(o);
-  if(sl.packs){const st=el('div','stepper');st.append(el('span',null,sl.packs[2]+' · je '+eur(sl.packs[1])));
+  if(sl.packs){const st=el('div','stepper');st.append(thumb(sl.packs[3],'th sm'),el('span',null,sl.packs[2]+' · je '+eur(sl.packs[1])));
    const mi=el('button',null,'−');mi.dataset.pack='-1';mi.setAttribute('aria-label','weniger');const pl=el('button',null,'+');pl.dataset.pack='1';pl.setAttribute('aria-label','mehr');
    st.append(mi,el('b',null,String(C().packs)),pl);P.append(st)}
   P.append(el('p','note',sl.note));return}
  // Zusammenfassung
- const L=lines(S.model);const s=el('div','sum');s.append(el('h2',null,'Dein '+M.n),el('p','lead','Alles auf einen Blick. Die Namen führen zur Suche im Novritsch-Shop.'));
+ const L=lines(S.model);const s=el('div','sum');s.append(el('h2',null,'Dein '+M.n),el('p','lead','Alles auf einen Blick. Die Namen führen zur Produktseite im Novritsch-Shop.'));
  const grp=[['base','Grundmodell'],['opt','Ausstattung'],['req','Wird zusätzlich benötigt']];
  for(const [k,t] of grp){const it=L.filter(l=>l[3]===k);if(!it.length)continue;s.append(el('h3',null,t));const ul=el('ul');
-  for(const [n,p,f] of it){const li=el('li');const a=el('a',null,n);a.href=shop(n.replace(/ × \d+$/,''));a.target='_blank';a.rel='noopener';li.append(a,el('b',null,(f?'ab ':'')+eur(p)));ul.append(li)}s.append(ul)}
+  for(const [n,p,f,,k] of it){const li=el('li');const a=el('a',null,n);a.href=link(k,n.replace(/ × \d+$/,''));a.target='_blank';a.rel='noopener';li.append(thumb(k,'th sm'),a,el('b',null,(f?'ab ':'')+eur(p)));ul.append(li)}s.append(ul)}
  const tt=el('div','tot');tt.append(el('span',null,'Gesamt (Richtpreis)'),el('b',null,total(L)));s.append(tt);
  const code=encode(S.model);const cl=el('div','codeline');cl.append(el('span',null,'Build-Code'),el('code',null,code.slice(0,4)+' '+code.slice(4)));
  const cp=el('button','btn ghost','Code kopieren');cp.dataset.copy=code;cl.append(cp);s.append(cl);
@@ -388,6 +398,8 @@ function grain(m){const g=GRAIN[m.name.replace(/\.\d+$/,'')];if(!g||m.userData.g
 const prep=g=>{g.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;const m=o.material;if(!m)return;grain(m);
  if(m.name==='Lens'){m.transparent=true;m.opacity=.85;m.metalness=.2;m.roughness=.05}
  if(/Print_White/.test(m.name))m.emissive=new THREE.Color(0x333333)}});return g};
+// Texturen per <img> statt fetch(blob:) laden – der Artefakt-Server erlaubt fetch nur auf eigene Dateien
+try{window.createImageBitmap=undefined}catch(e){}
 const loader=new GLTFLoader();const cache={};
 // glTF-JSON mit eingebettetem Puffer → GLB im Speicher (der Artefakt-Server blockiert fetch() auf data:-URLs)
 function toGLB(t){const j=JSON.parse(t);const parts=[];
