@@ -108,7 +108,7 @@ button{cursor:pointer}
 .sum .tot{display:flex;justify-content:space-between;align-items:baseline;margin-top:16px}
 .sum .tot b{font:700 30px Poppins;white-space:nowrap}
 .codeline{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:var(--soft);padding:12px 14px;margin-top:18px}
-.codeline code{font:700 20px Poppins;letter-spacing:.1em}
+.codeline code{font:700 20px Poppins;letter-spacing:.1em;word-break:break-all}
 .acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
 table.cmp{width:100%;border-collapse:collapse;font-size:14px;margin-top:8px}
 table.cmp th,table.cmp td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line);vertical-align:top}
@@ -132,6 +132,23 @@ footer a{color:var(--ink)}
  .pbar{flex-wrap:nowrap;gap:8px;min-height:68px;padding:10px 12px}.pbar .lbl{display:none}.pbar .tot{font-size:19px}.pbar .btn{padding:0 12px;min-height:44px}
  .panel{padding:20px 16px 26px}}
 @media(prefers-reduced-motion:reduce){.busy{transition:none}}
+
+.spr{background-size:1000% 1000%;background-repeat:no-repeat;background-color:#fff}
+.xchips{margin-top:4px}.xchips .chip{min-height:38px;padding:0 12px;font-size:12px}.xchips .chip small{font:500 11px Poppins;opacity:.6;margin-left:2px}
+.xtools{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:14px 0 10px}
+.xtools input[type=search]{flex:1 1 200px;min-height:44px;padding:0 12px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:15px inherit}
+.xin{display:flex;align-items:center;gap:6px;font-size:14px;min-height:44px}.xin input{width:18px;height:18px;accent-color:var(--red)}
+.xcount{font:600 13px Poppins;color:var(--red2);margin-left:auto}
+.xlist{display:flex;flex-direction:column}
+.xi{display:grid;grid-template-columns:52px minmax(0,1fr) auto auto;gap:4px 12px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)}
+.xi.on{box-shadow:inset 3px 0 0 var(--red);padding-left:10px}
+.xi .tx{display:flex;flex-direction:column;gap:2px;min-width:0}.xi .tx a{color:var(--ink);font:600 14px Poppins;text-decoration:none}.xi .tx a:hover{text-decoration:underline}
+.xi .tx small{color:var(--mute);font-size:12.5px}.xi .pr{font:600 14px Poppins;white-space:nowrap;text-align:right}.xi .pr s{font-weight:400;color:var(--mute);font-size:12px}
+.xi .qty{display:flex;align-items:center;gap:6px;justify-content:flex-end;min-width:118px}
+.xi .qty.step button{width:40px;height:40px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:600 17px Poppins}.xi .qty.step b{font:600 16px Poppins;width:2ch;text-align:center}
+.xi .na{font-size:12.5px;color:var(--mute)}
+.btn.sm{min-height:40px;padding:0 14px;font-size:12px}
+@media (max-width:520px){.xi{grid-template-columns:52px minmax(0,1fr) auto}.xi .qty{grid-column:2/4;justify-content:flex-start}}
 </style></head>
 <body>
 <header class="top">
@@ -150,7 +167,7 @@ footer a{color:var(--ink)}
  </div>
  <div class="grid" id="grid"></div>
  <div class="codebox" id="codebox">
-  <form id="codeform"><label for="codein">Build-Code</label><input id="codein" maxlength="8" autocomplete="off" placeholder="z. B. 2104 0A">
+  <form id="codeform"><label for="codein">Build-Code</label><input id="codein" maxlength="120" autocomplete="off" placeholder="z. B. 2104 0A">
    <button class="btn" type="submit">Konfiguration laden</button><span class="msg" id="codemsg">Den Code bekommst du in der Zusammenfassung.</span></form>
  </div>
 </section>
@@ -200,11 +217,22 @@ const eur=v=>v.toLocaleString('de-AT',{style:'currency',currency:'EUR'});
 const shop=n=>'https://eu.novritsch.com/?s='+encodeURIComponent(n)+'&post_type=product';
 const P='https://eu.novritsch.com/product/';
 const URLS={ssg10a3:'ssg10-a3-airsoft-sniper-rifle/',ssg96:'ssg96-mk2-airsoft-sniper-rifle/',ssr74:'ssr74-automatic-electric-gun/',ssr9:'ssr9-dsg/',ssq4:'ssq4-hpa-gas-blowback-rifle/',ADAPTER96:'ssg96-suppressor-adapter/',ssg11:'ssg11-airsoft-sniper-rifle/',mk1:'ssr4-automatic-electric-gun-aeg/',mk2:'ssr4-mk2-automatic-electric-gun/',OPT_4x:'4x40-minimal-scope/',OPT_14:'1-4x-variable-scope/',
- OPT_16:'premium-1-6x-variable-scope-mk2/',OPT_rdv3:'red-dot-v3/',OPT_micro:'red-dot-micro-v2/',MUZ_rifle:'novritsch-suppressor/',MUZ_modv1:'modular-suppressor-v1-2/',
+ OPT_16:'premium-1-6x-variable-scope-mk2/',OPT_rdv3:'red-dot-v3/',OPT_acog:'acog-4x/',OPT_v7:'red-dot-v7/',OPT_micro:'red-dot-micro-v2/',MUZ_rifle:'novritsch-suppressor/',MUZ_modv1:'modular-suppressor-v1-2/',
  MUZ_fast:'fast-attach-suppressor-system/',MUZ_fdv2:'fast-detach-mock-suppressor-v2/',MUZ_comp:'sniper-rifle-compensator/',BIP_v1:'bipod-v1/',BIP_split:'split-bipod/',
  MAG_long:'ssg11-long-dummy-magazine/',MAG_midcap:'m4-mid-cap-magazine-gen2-225bbs/',ADAPTER:'ssg10-suppressor-adapter/',PACK_ssg11:'ssg11-magazine-58-bbs-triple-pack/',PACK_ssr:'m4-mid-cap-magazine-gen2-225bbs/'};
-const link=(k,n)=>URLS[k]?P+URLS[k]:shop(n);
-const thumb=(k,cls)=>{const i=el('img',cls||'th');i.alt='';i.width=72;i.height=72;i.decoding='async';const f=MODELS[k]?'card_'+k+'.jpg':(k==='ADAPTER96'?'p_ADAPTER.jpg':'p_'+k+'.jpg');loadImg(f).then(u=>{if(u)i.src=u;else i.style.visibility='hidden'});return i};
+const SLUG2ID={};for(const k in URLS)SLUG2ID[URLS[k].replace(/\/$/,'')]=k;
+// ---------- Kompletter Zubehör-Katalog je System (von den „The … System“-Seiten im EU-Shop)
+let CAT=null;const catReady=fetch('cat.json').then(r=>r.json()).then(j=>{CAT=j;return j}).catch(()=>null);
+const SYS={ssg11:'ssg11',ssg10a3:'ssg10',ssg96:'ssg96',mk1:'ssr4',mk2:'ssr4',ssr74:'ssr74',ssq4:'ssq4',ssr9:'ssr9'};
+const SYSN={ssg11:'The SSG11 System',ssg10:'The SSG10 System',ssg96:'The SSG96 System',ssr4:'The SSR4 System',ssr74:'The SSR74 System',ssq4:'The SSQ4 System',ssr9:'The SSR9 System'};
+const SYSURL={ssg11:'sniper-rifles/the-ssg11-system/',ssg10:'sniper-rifles/the-ssg10-system/',ssg96:'sniper-rifles/the-ssg96-system/',ssr4:'rifles/the-ssr4-system/',ssr74:'rifles/the-ssr74-system/',ssq4:'rifles/the-ssq4-system/',ssr9:'rifles/the-ssr9-system/'};
+const CATN={'aiming-devices':'Optik & Visiere','muzzle-devices':'Mündung & Tracer','accessories':'Zubehör & Tuning','flashlights-lasers':'Licht & Laser','hpa':'HPA','carrying':'Tragen & Transport','camouflage':'Tarnung','bbs-batteries':'BBs & Akkus','ammunition':'BBs & Laden','bbs-gas':'BBs & Gas'};
+const cp=i=>CAT&&CAT.P[i];   // [slug,name,preis,alt,ab,lieferbar]
+const buyable=p=>p&&p[2]>0&&!/in development/i.test(p[1]);
+const link=(k,n)=>{if(/^c\d+$/.test(k)&&cp(+k.slice(1)))return P+cp(+k.slice(1))[0]+'/';return URLS[k]?P+URLS[k]:shop(n)};
+const sprite=(i,cls)=>{const d=el('span',(cls||'th')+' spr');d.setAttribute('aria-hidden','true');const sh=Math.floor(i/100),j=i%100;
+ loadImg('cat_'+sh+'.jpg').then(u=>{if(u){d.style.backgroundImage=`url(${u})`;d.style.backgroundPosition=`${(j%10)*100/9}% ${Math.floor(j/10)*100/9}%`}});return d};
+const thumb=(k,cls)=>{if(/^c\d+$/.test(k))return sprite(+k.slice(1),cls);const i=el('img',cls||'th');i.alt='';i.width=72;i.height=72;i.decoding='async';const f=MODELS[k]?'card_'+k+'.jpg':(k==='ADAPTER96'?'p_ADAPTER.jpg':'p_'+k+'.jpg');loadImg(f).then(u=>{if(u)i.src=u;else i.style.visibility='hidden'});return i};
 
 // ---------- Katalog (Richtpreise EU-Shop, Stand 25.11.2026)
 const PART={
@@ -215,6 +243,8 @@ const PART={
  OPT_16:['Premium 1-6x LPVO Mk2',139,0,'LPVO mit 1- bis 6-facher Vergrößerung.'],
  OPT_rdv3:['Red Dot V3',89,0,'Leuchtpunktvisier für schnelles Zielen mit beiden Augen offen.'],
  OPT_micro:['Red Dot Micro V2',49.50,0,'Sehr kleines, leichtes Leuchtpunktvisier.'],
+ OPT_acog:['4x ACOG (BB Proof)',109,0,'Kompaktes Prismenvisier, feste 4-fach-Vergrößerung, rote Faseroptik.'],
+ OPT_v7:['Red Dot V7 (BB Proof)',69,0,'Großes rechteckiges Fenster im Holo-Stil, Knöpfe seitlich.'],
  MUZ_rifle:['Rifle Mock Suppressor',26,1,'Langer Schalldämpfer-Look (Attrappe).'],
  MUZ_modv1:['Modular Mock Suppressor V1',32,1,'Modularer Schalldämpfer-Look (Attrappe).'],
  MUZ_fast:['Fast Attach Mock Suppressor',31.85,1,'Zum schnellen Aufstecken (Attrappe).'],
@@ -234,8 +264,8 @@ const SSG_SLOTS=[
  {key:'mag',title:'Magazin',sub:'58 BBs, doppelreihig',none:['Standardmagazin','58 BBs, im Lieferumfang.'],from:[0,-0.08,0],ids:['MAG_long'],view:'side',
   packs:['SSG11 Magazin (58 BBs) – 3er-Pack',32.50,'Ersatzmagazine, 3er-Pack','PACK_ssg11'],note:'Ersatzmagazine kannst du unten dazunehmen.'}];
 const ssrSlots=(std,mag)=>[
- {key:'optic',title:'Optik',sub:'Picatinny auf dem Upper',none:['Keine Optik','Offene Schiene.'],from:[0,0.10,0],ids:['OPT_rdv3','OPT_micro','OPT_14','OPT_16'],view:'optic',
-  note:'Red Dots und LPVOs, wie sie für die SSR4 angeboten werden.'},
+ {key:'optic',title:'Optik',sub:'Picatinny auf dem Upper',none:['Keine Optik','Offene Schiene.'],from:[0,0.10,0],ids:['OPT_rdv3','OPT_micro','OPT_14','OPT_16','OPT_acog','OPT_v7'],view:'optic',
+  note:'Red Dots, ACOG und LPVOs, wie sie für die SSR4 angeboten werden.'},
  {key:'muzzle',title:'Mündung',sub:'14 mm CCW, direkt',none:[std,'Standard, im Lieferumfang.'],from:[0.12,0,0],ids:['MUZ_rifle','MUZ_modv1','MUZ_fast','MUZ_fdv2'],view:'muzzle',
   note:'Die SSR4 hat ein 14-mm-CCW-Gewinde: Mock Suppressoren passen ohne Adapter, der Standard-Aufsatz kommt dafür ab.'},
  {key:'bipod',title:'Zweibein',sub:'M-LOK am Handschutz',none:['Kein Zweibein',''],from:[0,-0.10,0],ids:['BIP_split'],view:'q34',
@@ -248,13 +278,13 @@ const MODELS={
   specs:[['Typ','Repetierer'],['Magazin','58 BBs'],['Gewinde','28 mm CCW']],
   off:{},hide:{muzzle:/^(ThreadProtector|Knurl\d|MuzzleCap)/},anch:{optic:[0.06,0.05],muzzle:[0.66,0],detail:[0.02,-0.01]},adapter:true,
   def:{optic:'Scope_3-9x50',muzzle:'none',bipod:'none',mag:'none',packs:0}},
- mk1:{n:'SSR4 Mk1',series:'Gewehr · Gen2',f:'rifle',img:'card_mk1.jpg',files:MK1F,floor:-0.189,price:['SSR4 Mk1 Gen2',137.40],side:-1,
+ mk1:{n:'SSR4 Mk1',mnt:[0.1845,0.2645,0.2945],series:'Gewehr · Gen2',f:'rifle',img:'card_mk1.jpg',files:MK1F,floor:-0.189,price:['SSR4 Mk1 Gen2',137.40],side:-1,
   slots:ssrSlots('Flash Hider',{sub:'140 BBs Standard',std:'Standardmagazin (140 BBs)',ids:['MAG_midcap'],note:'Die Mk1 nimmt auch die M4 Mid-Cap mit 225 BBs.'}),
   specs:[['Länge','74 cm'],['Gewicht','2,3 kg'],['Magazin','140 BBs']],
   off:{optic:[-0.06477,0.00771],muzzle:[-0.25781,0.000657],bipod:[-0.03172,0.02355]},
   hide:{muzzle:/^Mk1FlashHider/,mag:/^(Mk1Mag$|Mk1Mag\.|Mk1MagBase|Mk1MP)/},anch:{optic:[0.005,0.06],muzzle:[0.37,0],detail:[0.0,-0.04]},
   def:{optic:'none',muzzle:'none',bipod:'none',mag:'none',packs:0}},
- mk2:{n:'SSR4 Mk2',series:'Gewehr',f:'rifle',img:'card_mk2.jpg',files:MK2F,floor:-0.198,price:['SSR4 Mk2',246.75,1],side:-1,
+ mk2:{n:'SSR4 Mk2',mnt:[0.1725,0.2525,0.2825],series:'Gewehr',f:'rifle',img:'card_mk2.jpg',files:MK2F,floor:-0.198,price:['SSR4 Mk2',246.75,1],side:-1,
   slots:ssrSlots('Kompensator',{sub:'225 BBs Mid-Cap dabei',std:'Mid-Cap (225 BBs)',ids:[],note:'Die Mk2 kommt schon mit der Mid-Cap; unten kannst du weitere dazunehmen.'}),
   specs:[['Länge','73–81,5 cm'],['Gewicht','2,38 kg'],['Magazin','225 BBs']],
   off:{optic:[-0.10125,0.00665],muzzle:[-0.26214,0.000657],bipod:[-0.04368,0.02064]},
@@ -268,16 +298,16 @@ const MODELS={
   slots:[{key:'optic',title:'Optik',sub:'Picatinny-Schiene',none:['Keine Optik','Offene Schiene.'],from:[0,0.10,0],ids:['Scope_3-9x50','OPT_416','OPT_4x','OPT_14','OPT_16','OPT_rdv3','OPT_micro'],view:'optic',note:'Wird auf der oberen Schiene montiert.'},{key:'muzzle',title:'Mündung',sub:'über Adapter',none:['Gewindeschutz','Standard, im Lieferumfang.'],from:[0.12,0,0],ids:['MUZ_rifle', 'MUZ_modv1', 'MUZ_fast', 'MUZ_fdv2'],view:'muzzle',note:'Braucht den SSG96 Mock Suppressor Adapter, wird mitgerechnet.'},{key:'bipod',title:'Zweibein',sub:'Unter dem Vorderschaft',none:['Kein Zweibein',''],from:[0,-0.10,0],ids:['BIP_v1'],view:'q34',note:'Bipod V1 an der Schiene/dem Riemenpunkt vorne unter dem Schaft. Passform im Shop prüfen.'},{key:'mag',title:'Magazin',sub:'22 BBs Standard',none:['Standardmagazin','Im Lieferumfang.'],from:[0,-0.08,0],ids:[],view:'side',packs:['SSG96 Magazin (22 BBs)',14,'Ersatzmagazine','PACK_none'],note:'Ersatzmagazine kannst du hier dazunehmen.'}],
   specs:[['Länge', '108,5 cm'], ['Gewicht', '3,8 kg'], ['Magazin', '22 BBs']],off:{"optic": [-0.17171, -0.00868], "muzzle": [-0.04763, 0.00066], "bipod": [-0.13456, -0.00762]},hide:{},anch:{"optic": [-0.12171, 0.04997], "detail": [-0.15171, -0.04503], "muzzle": [0.5425, 0]},adapter:true,adapterName:'ssg96',
   def:{optic:'none',muzzle:'none',bipod:'none',mag:'none',packs:0}},
- ssr74:{n:'SSR74',series:'Gewehr',f:'rifle',img:'card_ssr74.jpg',files:['SSR74_1.json','SSR74_2.json','SSR74_3.json'],floor:-0.22642,price:['SSR74 AEG (Long)', 299, 1],side:1,
-  slots:[{key:'optic',title:'Optik',sub:'Picatinny-Schiene',none:['Keine Optik','Offene Schiene.'],from:[0,0.10,0],ids:['OPT_rdv3','OPT_micro','OPT_14','OPT_16'],view:'optic',note:'Wird auf der oberen Schiene montiert.'},{key:'muzzle',title:'Mündung',sub:'14 mm CCW',none:['Mündungsbremse','Standard, im Lieferumfang.'],from:[0.12,0,0],ids:['MUZ_rifle', 'MUZ_modv1', 'MUZ_fast', 'MUZ_fdv2'],view:'muzzle',note:'14 mm CCW Gewinde: Mock Suppressoren passen direkt, die Mündungsbremse kommt dafür ab.'},{key:'bipod',title:'Zweibein',sub:'M-LOK am Handschutz',none:['Kein Zweibein',''],from:[0,-0.10,0],ids:['BIP_split'],view:'q34',note:'Zwei Einzelbeine, seitlich in die M-LOK-Schlitze geschraubt.'},{key:'mag',title:'Magazin',sub:'200 BBs Standard',none:['Standardmagazin','Im Lieferumfang.'],from:[0,-0.08,0],ids:[],view:'side',packs:['SSR74 Magazin (200 BBs)',15,'Ersatzmagazine','PACK_none'],note:'Ersatzmagazine kannst du hier dazunehmen.'}],
+ ssr74:{n:'SSR74',mnt:[0.1466,0.2266,0.2566],series:'Gewehr',f:'rifle',img:'card_ssr74.jpg',files:['SSR74_1.json','SSR74_2.json','SSR74_3.json'],floor:-0.22642,price:['SSR74 AEG (Long)', 299, 1],side:1,
+  slots:[{key:'optic',title:'Optik',sub:'Picatinny-Schiene',none:['Keine Optik','Offene Schiene.'],from:[0,0.10,0],ids:['OPT_rdv3','OPT_micro','OPT_14','OPT_16','OPT_acog','OPT_v7'],view:'optic',note:'Wird auf der oberen Schiene montiert.'},{key:'muzzle',title:'Mündung',sub:'14 mm CCW',none:['Mündungsbremse','Standard, im Lieferumfang.'],from:[0.12,0,0],ids:['MUZ_rifle', 'MUZ_modv1', 'MUZ_fast', 'MUZ_fdv2'],view:'muzzle',note:'14 mm CCW Gewinde: Mock Suppressoren passen direkt, die Mündungsbremse kommt dafür ab.'},{key:'bipod',title:'Zweibein',sub:'M-LOK am Handschutz',none:['Kein Zweibein',''],from:[0,-0.10,0],ids:['BIP_split'],view:'q34',note:'Zwei Einzelbeine, seitlich in die M-LOK-Schlitze geschraubt.'},{key:'mag',title:'Magazin',sub:'200 BBs Standard',none:['Standardmagazin','Im Lieferumfang.'],from:[0,-0.08,0],ids:[],view:'side',packs:['SSR74 Magazin (200 BBs)',15,'Ersatzmagazine','PACK_none'],note:'Ersatzmagazine kannst du hier dazunehmen.'}],
   specs:[['Länge', '87,6 cm'], ['Gewicht', '3,36 kg'], ['Magazin', '200 BBs']],off:{"optic": [-0.03826, 0.02391], "muzzle": [-0.2222, 0.00066], "bipod": [-0.06954, 0.01295]},hide:{muzzle:/^SSR74Brake/},anch:{"optic": [0.01174, 0.08257], "detail": [-0.01826, -0.01243], "muzzle": [0.37993, 0]},
   def:{optic:'none',muzzle:'none',bipod:'none',mag:'none',packs:0}},
- ssr9:{n:'SSR9 DSG',series:'Kompakt',f:'rifle',img:'card_ssr9.jpg',files:['SSR9_1.json'],floor:-0.21232,price:['SSR9 DSG', 289, 0],side:1,
-  slots:[{key:'optic',title:'Optik',sub:'Picatinny-Schiene',none:['Keine Optik','Offene Schiene.'],from:[0,0.10,0],ids:['OPT_rdv3','OPT_micro','OPT_14','OPT_16'],view:'optic',note:'Wird auf der oberen Schiene montiert.'}],
+ ssr9:{n:'SSR9 DSG',mnt:[0.19,0.205,0.225],series:'Kompakt',f:'rifle',img:'card_ssr9.jpg',files:['SSR9_1.json'],floor:-0.21232,price:['SSR9 DSG', 289, 0],side:1,
+  slots:[{key:'optic',title:'Optik',sub:'Picatinny-Schiene',none:['Keine Optik','Offene Schiene.'],from:[0,0.10,0],ids:['OPT_rdv3','OPT_micro','OPT_14','OPT_16','OPT_acog','OPT_v7'],view:'optic',note:'Wird auf der oberen Schiene montiert.'}],
   specs:[['Länge', '55,2 cm'], ['Gewicht', '1,9 kg'], ['Magazin', '120 BBs']],off:{"optic": [-0.01788, 0.0029]},hide:{},anch:{"optic": [0.03212, 0.06156], "detail": [0.00212, -0.03344], "muzzle": [0.226, 0]},
   def:{optic:'none',muzzle:'none',bipod:'none',mag:'none',packs:0}},
- ssq4:{n:'SSQ4',series:'Gewehr · HPA/Gas',f:'rifle',img:'card_ssq4.jpg',files:['SSQ4_1.json','SSQ4_2.json'],floor:-0.17893,price:['SSQ4 HPA/Gas Blowback Rifle', 499, 1],side:1,
-  slots:[{key:'optic',title:'Optik',sub:'Picatinny-Schiene',none:['Keine Optik','Offene Schiene.'],from:[0,0.10,0],ids:['OPT_rdv3','OPT_micro','OPT_14','OPT_16'],view:'optic',note:'Wird auf der oberen Schiene montiert.'},{key:'bipod',title:'Zweibein',sub:'M-LOK am Handschutz',none:['Kein Zweibein',''],from:[0,-0.10,0],ids:['BIP_split'],view:'q34',note:'Zwei Einzelbeine, seitlich in die M-LOK-Schlitze geschraubt.'},{key:'mag',title:'Magazin',sub:'Standardmagazin',none:['Standardmagazin','Im Lieferumfang.'],from:[0,-0.08,0],ids:[],view:'side',packs:['SSQ4 HPA Magazin (125 BBs)',19,'Ersatzmagazine (HPA)','PACK_none'],note:'Ersatzmagazine kannst du hier dazunehmen.'}],
+ ssq4:{n:'SSQ4',mnt:[0.1151,0.1951,0.2251],series:'Gewehr · HPA/Gas',f:'rifle',img:'card_ssq4.jpg',files:['SSQ4_1.json','SSQ4_2.json'],floor:-0.17893,price:['SSQ4 HPA/Gas Blowback Rifle', 499, 1],side:1,
+  slots:[{key:'optic',title:'Optik',sub:'Picatinny-Schiene',none:['Keine Optik','Offene Schiene.'],from:[0,0.10,0],ids:['OPT_rdv3','OPT_micro','OPT_14','OPT_16','OPT_acog','OPT_v7'],view:'optic',note:'Wird auf der oberen Schiene montiert.'},{key:'bipod',title:'Zweibein',sub:'M-LOK am Handschutz',none:['Kein Zweibein',''],from:[0,-0.10,0],ids:['BIP_split'],view:'q34',note:'Zwei Einzelbeine, seitlich in die M-LOK-Schlitze geschraubt.'},{key:'mag',title:'Magazin',sub:'Standardmagazin',none:['Standardmagazin','Im Lieferumfang.'],from:[0,-0.08,0],ids:[],view:'side',packs:['SSQ4 HPA Magazin (125 BBs)',19,'Ersatzmagazine (HPA)','PACK_none'],note:'Ersatzmagazine kannst du hier dazunehmen.'}],
   specs:[['Länge', '70–78,3 cm'], ['Gewicht', 'ab 2,46 kg'], ['Magazin', '32 / 125 BBs']],off:{"optic": [-0.02615, 0.0036], "bipod": [-0.10111, 0.01916]},hide:{},anch:{"optic": [0.02385, 0.06226], "detail": [-0.00615, -0.03274], "muzzle": [0.3, 0]},
   def:{optic:'none',muzzle:'none',bipod:'none',mag:'none',packs:0}},
  cmp:{n:'SSR4 Mk1 vs. Mk2',files:[...MK1F,...MK2F],offs:[...MK1F.map(()=>0.17),...MK2F.map(()=>-0.17)],floor:-0.37,side:-1,slots:[],off:{},hide:{},anch:{}}};
@@ -299,17 +329,23 @@ for(const k of ORDER)S.cfg[k]=Object.assign({},MODELS[k].def,S.cfg[k]||{});
 if(!MODELS[S.model])S.model='ssg11';
 const save=()=>{try{localStorage.setItem('nov-cfg2',JSON.stringify(S))}catch(e){}};
 const C=()=>S.cfg[S.model];
-const stepsOf=m=>MODELS[m].slots.length?[...MODELS[m].slots.map(s=>s.title),'Zusammenfassung']:['Vergleich'];
+const stepsOf=m=>MODELS[m].slots.length?[...MODELS[m].slots.map(s=>s.title),'Alles Zubehör','Zusammenfassung']:['Vergleich'];
 
 // ---------- Build-Code: Modell, 4 Slots, Packs + 2 Prüfzeichen (8 Zeichen)
 const B36='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 const SK=['optic','muzzle','bipod','mag'];const slotOf=(M,k)=>M.slots.find(s=>s.key===k);
-function encode(m){const M=MODELS[m],c=S.cfg[m];const d=[CODEORDER.indexOf(m),...SK.map(k=>{const s=slotOf(M,k);return s?Math.max(0,['none',...s.ids].indexOf(c[k])):0}),c.packs||0];
+function encode(m){return encode8(m)+encX(S.cfg[m].x)}
+function encX(x){const t=Object.entries(x||{}).filter(([i,q])=>q>0).sort((a,b)=>a[0]-b[0]).map(([i,q])=>B36[Math.floor(i/36)]+B36[i%36]+B36[Math.min(9,q)]).join('');
+ if(!t)return '';let h=0;for(const ch of t)h=(h*31+B36.indexOf(ch))%36;return '-'+t+B36[h]}
+function decX(t){if(!t)return {};if(t.length%3!==1)return null;const b=t.slice(0,-1);let h=0;for(const ch of b)h=(h*31+B36.indexOf(ch))%36;if(B36[h]!==t.slice(-1))return null;
+ const x={};for(let i=0;i<b.length;i+=3){const v=B36.indexOf(b[i])*36+B36.indexOf(b[i+1]),q=B36.indexOf(b[i+2]);if(v<0||q<1)return null;x[v]=q}return x}
+function encode8(m){const M=MODELS[m],c=S.cfg[m];const d=[CODEORDER.indexOf(m),...SK.map(k=>{const s=slotOf(M,k);return s?Math.max(0,['none',...s.ids].indexOf(c[k])):0}),c.packs||0];
  let sum=0;d.forEach((v,i)=>sum+=(v+1)*(i+7));return d.map(v=>B36[Math.max(0,v)]).join('')+B36[sum%36]+B36[(sum*7+3)%36]}
-function decode(code){code=(code||'').toUpperCase().replace(/[^0-9A-Z]/g,'');if(code.length!==8)return null;
+function decode(code){const parts=(code||'').toUpperCase().replace(/[^0-9A-Z-]/g,'').split('-').filter(Boolean);code=parts[0]||'';if(code.length!==8)return null;
+ const x=decX(parts.slice(1).join(''));if(!x)return null;
  const d=[...code.slice(0,6)].map(ch=>B36.indexOf(ch));let sum=0;d.forEach((v,i)=>sum+=(v+1)*(i+7));
  if(code[6]!==B36[sum%36]||code[7]!==B36[(sum*7+3)%36])return null;
- const m=CODEORDER[d[0]];if(!m)return null;const M=MODELS[m],cfg={packs:Math.min(9,d[5])};
+ const m=CODEORDER[d[0]];if(!m)return null;const M=MODELS[m],cfg={packs:Math.min(9,d[5]),x};
  for(let i=0;i<4;i++){const sl=slotOf(M,SK[i]);if(!sl){if(d[i+1])return null;cfg[SK[i]]='none';continue}const ids=['none',...sl.ids];if(d[i+1]>=ids.length)return null;cfg[SK[i]]=ids[d[i+1]]}return {m,cfg}}
 
 // ---------- Preise
@@ -317,7 +353,9 @@ function lines(m){const M=MODELS[m];if(m==='cmp')return [[...MODELS.mk1.price,'b
  const cfg=S.cfg[m],L=[[M.price[0],M.price[1],M.price[2],'base',m]];
  for(const sl of M.slots){const id=cfg[sl.key];if(id&&id!=='none'){const [n,p,f]=PART[id];L.push([n,p,f,'opt',id])}}
  if(M.adapter&&cfg.muzzle!=='none'){const A=ADAPTERS[M.adapterName||'ssg11'];L.push([A[0],A[1],0,'req',A[2]])}
- const pk=M.slots.find(s=>s.packs);if(pk&&cfg.packs)L.push([pk.packs[0]+(cfg.packs>1?' × '+cfg.packs:''),pk.packs[1]*cfg.packs,0,'opt',pk.packs[3]]);return L}
+ const pk=M.slots.find(s=>s.packs);if(pk&&cfg.packs)L.push([pk.packs[0]+(cfg.packs>1?' × '+cfg.packs:''),pk.packs[1]*cfg.packs,0,'opt',pk.packs[3]]);
+ if(CAT)for(const [i,q] of Object.entries(cfg.x||{})){const p=cp(+i);if(!q||!buyable(p))continue;L.push([p[1]+(q>1?' × '+q:''),Math.round(p[2]*q*100)/100,p[4],'x','c'+i])}
+ return L}
 const total=L=>(L.some(l=>l[2])?'ab ':'')+eur(L.reduce((a,l)=>a+l[1],0));
 
 // ---------- Modellauswahl
@@ -361,17 +399,57 @@ function renderPanel(){const P=$('panel');P.innerHTML='';const M=MODELS[S.model]
    const mi=el('button',null,'−');mi.dataset.pack='-1';mi.setAttribute('aria-label','weniger');const pl=el('button',null,'+');pl.dataset.pack='1';pl.setAttribute('aria-label','mehr');
    st.append(mi,el('b',null,String(C().packs)),pl);P.append(st)}
   P.append(el('p','note',sl.note));return}
+ if(S.step===M.slots.length){renderExtras(P);return}
  // Zusammenfassung
  const L=lines(S.model);const s=el('div','sum');s.append(el('h2',null,'Dein '+M.n),el('p','lead','Alles auf einen Blick. Die Namen führen zur Produktseite im Novritsch-Shop.'));
- const grp=[['base','Grundmodell'],['opt','Ausstattung'],['req','Wird zusätzlich benötigt']];
+ const grp=[['base','Grundmodell'],['opt','Ausstattung (im 3D-Modell)'],['req','Wird zusätzlich benötigt'],['x','Weiteres Zubehör']];
  for(const [k,t] of grp){const it=L.filter(l=>l[3]===k);if(!it.length)continue;s.append(el('h3',null,t));const ul=el('ul');
   for(const [n,p,f,,k] of it){const li=el('li');const a=el('a',null,n);a.href=link(k,n.replace(/ × \d+$/,''));a.target='_blank';a.rel='noopener';li.append(thumb(k,'th sm'),a,el('b',null,(f?'ab ':'')+eur(p)));ul.append(li)}s.append(ul)}
  const tt=el('div','tot');tt.append(el('span',null,'Gesamt (Richtpreis)'),el('b',null,total(L)));s.append(tt);
- const code=encode(S.model);const cl=el('div','codeline');cl.append(el('span',null,'Build-Code'),el('code',null,code.slice(0,4)+' '+code.slice(4)));
+ const code=encode(S.model);const cl=el('div','codeline');cl.append(el('span',null,'Build-Code'),el('code',null,code));
  const cp=el('button','btn ghost','Code kopieren');cp.dataset.copy=code;cl.append(cp);s.append(cl);
  const a=el('div','acts');const lc=el('button','btn','Liste kopieren');lc.dataset.copy='list';a.append(lc);
  const rs=el('button','btn ghost','Zurücksetzen');rs.dataset.reset='1';a.append(rs);s.append(a);
  s.append(el('p','note','Mit dem Build-Code lädst du diese Konfiguration später wieder („Code laden“ oben rechts) oder schickst sie Freunden.'));P.append(s)}
+
+// ---------- Schritt „Alles Zubehör“: kompletter Katalog des Systems
+let XC='all',XQ='',XIN=false;
+function xItems(sys){const g=CAT.G[sys],seen=new Set(),out=[];for(const [c,a] of Object.entries(g))for(const i of a){if(XC!=='all'&&c!==XC)continue;if(seen.has(i))continue;seen.add(i);out.push([i,c])}return out}
+function slotFor(i){const id=SLUG2ID[cp(i)[0]];if(!id)return null;const sl=MODELS[S.model].slots.find(s=>s.ids.includes(id));return sl?[sl,id]:null}
+const xsel=()=>Object.values(C().x||{}).filter(q=>q>0).length;
+function renderExtras(Pn){const M=MODELS[S.model],sys=SYS[S.model];
+ Pn.append(el('h2',null,'Alles Zubehör'));
+ if(!CAT){Pn.append(el('p','lead','Katalog wird geladen …'));catReady.then(()=>{if(S.step===M.slots.length)renderPanel()});return}
+ const g=CAT.G[sys],all=new Set(Object.values(g).flat());
+ const lead=el('p','lead',`Alle ${all.size} Produkte, die Novritsch auf der Seite „${SYSN[sys]}“ als passend führt. `);
+ const a=el('a',null,'Seite im Shop');a.href='https://eu.novritsch.com/products/gun-systems/'+SYSURL[sys];a.target='_blank';a.rel='noopener';lead.append(a);Pn.append(lead);
+ const ch=el('div','chips xchips');ch.setAttribute('role','group');ch.setAttribute('aria-label','Kategorie');
+ for(const [c,n,k] of [['all','Alle',all.size],...Object.keys(g).map(c=>[c,CATN[c]||c,g[c].length])]){const b=el('button','chip');b.type='button';b.append(document.createTextNode(n+' '),el('small',null,String(k)));b.dataset.xc=c;b.setAttribute('aria-pressed',XC===c);ch.append(b)}
+ Pn.append(ch);
+ const tl=el('div','xtools');const inp=el('input');inp.type='search';inp.id='xq';inp.placeholder='Suchen, z. B. „Red Dot“';inp.value=XQ;inp.setAttribute('aria-label','Zubehör durchsuchen');
+ const lb=el('label','xin');const cb=el('input');cb.type='checkbox';cb.id='xin';cb.checked=XIN;lb.append(cb,document.createTextNode(' nur lieferbar'));
+ tl.append(inp,lb,el('span','xcount'));Pn.append(tl);
+ const L=el('div','xlist');L.id='xlist';Pn.append(L);renderXList();
+ Pn.append(el('p','note','Teile mit „In 3D wählen“ erscheinen direkt am Modell. Alles andere landet mit Preis und Link in der Zusammenfassung. Preise: Richtpreise aus dem EU-Shop, Stand 26.11.2026.'))}
+function xCount(){const c=document.querySelector('.xcount');if(c){const n=xsel();c.textContent=n?n+' gewählt':''}}
+function renderXList(){const L=$('xlist');if(!L)return;L.innerHTML='';const q=XQ.trim().toLowerCase();let n=0;
+ for(const [i,c] of xItems(SYS[S.model])){const p=cp(i);if(q&&!p[1].toLowerCase().includes(q))continue;if(XIN&&!p[5])continue;n++;L.append(xRow(i,c))}
+ if(!n)L.append(el('p','note','Nichts gefunden.'));xCount()}
+function xRow(i,c){const p=cp(i),q=(C().x||{})[i]||0,sf=slotFor(i),M=MODELS[S.model];const r=el('div','xi');r.dataset.row=i;r.dataset.cat=c;
+ const on=sf?C()[sf[0].key]===sf[1]:q>0;if(on)r.classList.add('on');
+ r.append(thumb('c'+i));const tx=el('div','tx');const a=el('a',null,p[1]);a.href=P+p[0]+'/';a.target='_blank';a.rel='noopener';tx.append(a);
+ const meta=[];if(XC==='all')meta.push(CATN[c]||c);if(sf||X3D[p[0]])meta.push('3D');if(!p[5])meta.push('derzeit ausverkauft');
+ if(M.adapter&&/suppressor-adapter$/.test(p[0]))meta.push('wird bei Mündungsteilen automatisch mitgerechnet');
+ tx.append(el('small',null,meta.join(' · ')));r.append(tx);
+ const pr=el('div','pr');if(p[2]>0){if(p[3])pr.append(el('s',null,eur(p[3])),el('br'));pr.append(document.createTextNode((p[4]?'ab ':'')+eur(p[2])))}else pr.textContent='–';r.append(pr);
+ const qc=el('div','qty');
+ if(sf){const b=el('button','btn sm'+(on?'':' ghost'),on?'Gewählt ✓':'In 3D wählen');b.type='button';b.dataset.xslot=sf[0].key;b.dataset.xid=sf[1];qc.append(b)}
+ else if(!buyable(p))qc.append(el('span','na','nicht bestellbar'));
+ else if(!q){const b=el('button','btn sm ghost','Hinzufügen');b.type='button';b.dataset.xadd=i;b.dataset.d=1;b.setAttribute('aria-label',p[1]+' hinzufügen');qc.append(b)}
+ else{const mi=el('button',null,'−');mi.type='button';mi.dataset.xadd=i;mi.dataset.d=-1;mi.setAttribute('aria-label','weniger');
+  const pl=el('button',null,'+');pl.type='button';pl.dataset.xadd=i;pl.dataset.d=1;pl.setAttribute('aria-label','mehr');qc.classList.add('step');qc.append(mi,el('b',null,String(q)),pl)}
+ r.append(qc);return r}
+function xRefresh(i){const r=document.querySelector(`.xi[data-row="${i}"]`);if(r)r.replaceWith(xRow(+i,r.dataset.cat));xCount()}
 function renderPrice(){const L=lines(S.model);$('total').textContent=S.model==='cmp'?eur(L[0][1])+' / ab '+eur(L[1][1]):total(L);
  $('plbl').textContent=S.model==='cmp'?'Mk1 / Mk2':'Gesamtpreis · '+MODELS[S.model].n}
 function renderConf(){$('cname').textContent=MODELS[S.model].n;renderSteps();renderPanel();renderPrice()}
@@ -439,9 +517,9 @@ const load=f=>cache[f]||(cache[f]=fetch(f).then(r=>{if(!r.ok)throw new Error(f);
 let guns=[];const shown={};const tweens=[];let gunModel=null;
 function fade(obj,on,from,base){const s=performance.now();obj.visible=true;const mats=[];
  obj.traverse(o=>{if(o.isMesh){if(!o.userData.own){o.material=o.material.clone();o.userData.own=1}mats.push(o.material)}});
- const end=()=>{obj.visible=on;obj.position.set(base[0],base[1],0);for(const m of mats){m.transparent=m.name==='Lens';m.opacity=m.name==='Lens'?.85:1}};
+ const bz=base[2]||0;const end=()=>{obj.visible=on;obj.position.set(base[0],base[1],bz);for(const m of mats){m.transparent=m.name==='Lens';m.opacity=m.name==='Lens'?.85:1}};
  if(reduce){end();return}
- tweens.push(n=>{const k=Math.min(1,(n-s)/450),e=1-Math.pow(1-k,3),t=on?1-e:e;obj.position.set(base[0]+from[0]*t,base[1]+from[1]*t,from[2]*t);
+ tweens.push(n=>{const k=Math.min(1,(n-s)/450),e=1-Math.pow(1-k,3),t=on?1-e:e;obj.position.set(base[0]+from[0]*t,base[1]+from[1]*t,bz+from[2]*t);
   for(const m of mats){m.transparent=true;m.opacity=(on?e:1-e)*(m.name==='Lens'?.85:1)}if(k>=1){end();return true}})}
 function gunVis(re,vis){for(const g of guns)g.traverse(o=>{if(o.isMesh&&re&&re.test(o.name))o.visible=vis})}
 async function apply(slotKey){const m=S.model,M=MODELS[m];const sl=M.slots.find(s=>s.key===slotKey);if(!sl||gunModel!==m)return;
@@ -456,14 +534,36 @@ async function apply(slotKey){const m=S.model,M=MODELS[m];const sl=M.slots.find(
   const base=M.off[slotKey]||[0,0];shown[slotKey]={id:want,obj:g,base,model:m};fade(g,true,sl.from,base)}
  catch(e){$('busy').textContent='Teil konnte nicht geladen werden';setTimeout(()=>{$('busy').textContent='Teil wird geladen …'},2500)}
  finally{$('busy').classList.remove('on')}}
+// ---------- Zubehör mit 3D-Modell (Lampen seitlich, PEQ oben, Griffe unten) – Position per Raycast am Handschutz
+const X3D={'rifle-flashlight':['LGT_long','side'],'rifle-flashlight-short':['LGT_short','side'],'premium-rifle-flashlight-bb-proof':['LGT_prem','side'],
+ 'peq-box-lightlaser':['LGT_peq','top'],'dummy-peq-box-v2':['LGT_peq','top'],'an-peq15-peq-box':['LGT_peq15','top'],'dummy-peq-box-v1':['LGT_peq15','top'],
+ 'vertical-grip-v2':['GRP_vert','grip'],'polymer-angled-grip-picatinny-v2':['GRP_angled','grip'],'angled-hand-stop':['GRP_hstop','grip'],
+ 'flat-hand-stop':['GRP_flat','grip'],'minimalist-handstop':['GRP_mini','grip']};
+const xshown={};const ray=new THREE.Raycaster();
+function surf(o,d){const ms=[];for(const g of guns){g.updateMatrixWorld(true);g.traverse(x=>{if(x.isMesh&&x.visible)ms.push(x)})}
+ ray.set(new THREE.Vector3(...o),new THREE.Vector3(...d));const h=ray.intersectObjects(ms,false);return h.length?h[0].point:null}
+function mountAt(k,M){const sd=M.side,[gx,lx,tx]=M.mnt;
+ if(k==='grip'){const p=surf([gx,-1,0],[0,1,0]);return p&&[gx,p.y,0]}
+ if(k==='top'){const p=surf([tx,1,0],[0,-1,0]);return p&&[tx,p.y,0]}
+ const t=surf([lx,1,0],[0,-1,0]),b=surf([lx,-1,0],[0,1,0]);if(!t||!b)return null;const ym=(t.y+b.y)/2,p=surf([lx,ym,sd],[0,0,-sd]);return p&&[lx,ym,p.z]}
+try{window.__nov={surf,mountAt,MODELS,guns:()=>guns,ray,xshown}}catch(e){}
+const XFROM={side:s=>[0,0,s*0.10],top:()=>[0,0.10,0],grip:()=>[0,-0.10,0]};
+async function applyX(){const m=S.model,M=MODELS[m];if(gunModel!==m||!CAT)return;
+ const want={};if(M.mnt)for(const [i,q] of Object.entries(C().x||{})){const p=cp(+i);if(q&&p&&X3D[p[0]])want[X3D[p[0]][1]]=p[0]}
+ for(const k of ['side','top','grip']){const cur=xshown[k],w=want[k];if(cur&&cur.slug===w&&cur.model===m)continue;
+  if(cur){fade(cur.obj,false,XFROM[k](M.side),cur.base);delete xshown[k]}
+  if(!w)continue;
+  try{const g=await load(X3D[w][0]+'.json');if(S.model!==m||!(want[k]===w))continue;const base=mountAt(k,M);if(!base)continue;
+   if(!g.parent)scene.add(g);g.scale.set(1,1,k==='side'?M.side:1);xshown[k]={slug:w,obj:g,base,model:m};fade(g,true,XFROM[k](M.side),base)}
+  catch(e){console.error(e)}}}
 async function loadGun(m,instant){if(gunModel===m)return;const M=MODELS[m];gunModel=null;
- for(const k in shown){shown[k].obj.visible=false;delete shown[k]}for(const g of guns)g.visible=false;
+ for(const k in shown){shown[k].obj.visible=false;delete shown[k]}for(const k in xshown){xshown[k].obj.visible=false;delete xshown[k]}for(const g of guns)g.visible=false;
  $('load').hidden=false;$('load').textContent='Modell wird geladen …';
  try{const objs=await Promise.all(M.files.map(load));if(S.model!==m)return;
   for(const g of guns)scene.remove(g);guns=objs;
   objs.forEach((o,i)=>{o.position.set(0,M.offs?M.offs[i]:0,0);o.visible=true;o.traverse(x=>{if(x.isMesh)x.visible=true});scene.add(o)});
   floor.position.y=M.floor;fitViews(objs,m);$('load').hidden=true;gunModel=m;
-  setView(m==='cmp'?'side':stepView(),instant);for(const sl of M.slots)apply(sl.key)}
+  setView(m==='cmp'?'side':stepView(),instant);for(const sl of M.slots)apply(sl.key);catReady.then(applyX)}
  catch(e){console.error(e);$('load').textContent='Das 3D-Modell konnte nicht geladen werden ('+(e&&e.message||e)+').'}}
 const stepView=()=>{const sl=MODELS[S.model].slots[S.step];return sl?sl.view:'q34'};
 
@@ -476,7 +576,7 @@ function openModel(m,step,instant){S.model=m;S.step=step||0;save();$('vModels').
 function setStep(i){const n=stepsOf(S.model).length;S.step=Math.max(0,Math.min(n-1,i));save();renderConf();if(gunModel===S.model)setView(stepView())}
 function route(){const h=decodeURIComponent(location.hash.slice(1));if(h===lastHash)return;
  if(h==='vergleich')return openModel('cmp',0,true);
- if(h.startsWith('build-')){const d=decode(h.slice(6));if(d){S.cfg[d.m]=Object.assign({},MODELS[d.m].def,d.cfg);return openModel(d.m,MODELS[d.m].slots.length,true)}}
+ if(h.startsWith('build-')){const d=decode(h.slice(6));if(d){S.cfg[d.m]=Object.assign({},MODELS[d.m].def,d.cfg);return openModel(d.m,MODELS[d.m].slots.length+1,true)}}
  showModels()}
 
 // ---------- Ereignisse
@@ -486,21 +586,28 @@ $('home').addEventListener('click',e=>{e.preventDefault();showModels()});
 $('back').addEventListener('click',showModels);
 $('openCode').addEventListener('click',()=>{showModels();const i=$('codein');i.scrollIntoView({block:'center',behavior:reduce?'auto':'smooth'});i.focus()});
 $('codeform').addEventListener('submit',e=>{e.preventDefault();const d=decode($('codein').value);
- if(!d){$('codemsg').textContent='Code ungültig – bitte die 8 Zeichen prüfen.';return}
- S.cfg[d.m]=Object.assign({},MODELS[d.m].def,d.cfg);$('codemsg').textContent='Geladen.';openModel(d.m,MODELS[d.m].slots.length)});
+ if(!d){$('codemsg').textContent='Code ungültig – bitte prüfen (8 Zeichen, mit Zubehör auch länger).';return}
+ S.cfg[d.m]=Object.assign({},MODELS[d.m].def,d.cfg);$('codemsg').textContent='Geladen.';openModel(d.m,MODELS[d.m].slots.length+1)});
 $('steps').addEventListener('click',e=>{const b=e.target.closest('[data-step]');if(b)setStep(+b.dataset.step)});
 $('prev').addEventListener('click',()=>{if(S.step===0)showModels();else setStep(S.step-1)});
 $('next').addEventListener('click',()=>{if(S.model==='cmp'){openModel('mk2',0);return}
- const n=stepsOf(S.model).length;if(S.step>=n-1){S.cfg[S.model]={...MODELS[S.model].def};save();setStep(0);for(const sl of MODELS[S.model].slots)apply(sl.key);setHash('build-'+encode(S.model));return}setStep(S.step+1)});
+ const n=stepsOf(S.model).length;if(S.step>=n-1){S.cfg[S.model]={...MODELS[S.model].def};save();setStep(0);for(const sl of MODELS[S.model].slots)apply(sl.key);applyX();setHash('build-'+encode(S.model));return}setStep(S.step+1)});
 $('panel').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+ if(b.dataset.xc){XC=b.dataset.xc;for(const x of b.parentNode.children)x.setAttribute('aria-pressed',x===b);renderXList();return}
+ if(b.dataset.xadd){const x=C().x||(C().x={}),i=b.dataset.xadd;x[i]=Math.max(0,Math.min(9,(x[i]||0)+ +b.dataset.d));if(!x[i])delete x[i];save();
+  xRefresh(i);const nb=document.querySelector(`.xi[data-row="${i}"] [data-xadd]${+b.dataset.d>0?':last-of-type':''}`);if(nb)nb.focus();renderPrice();applyX();setHash('build-'+encode(S.model));return}
+ if(b.dataset.xslot){const k=b.dataset.xslot;C()[k]=C()[k]===b.dataset.xid?'none':b.dataset.xid;save();
+  for(const r of document.querySelectorAll('.xi[data-row]'))if(slotFor(+r.dataset.row))xRefresh(r.dataset.row);
+  renderPrice();apply(k);setHash('build-'+encode(S.model));return}
  if(b.dataset.pack){C().packs=Math.max(0,Math.min(9,C().packs+ +b.dataset.pack));save();renderPanel();renderPrice();setHash('build-'+encode(S.model));return}
  if(b.dataset.slot){C()[b.dataset.slot]=b.dataset.id;save();
   for(const x of $('panel').querySelectorAll(`[data-slot="${b.dataset.slot}"]`))x.setAttribute('aria-pressed',x===b);
   renderPrice();apply(b.dataset.slot);setHash('build-'+encode(S.model));return}
- if(b.dataset.reset){S.cfg[S.model]={...MODELS[S.model].def};save();renderConf();for(const sl of MODELS[S.model].slots)apply(sl.key);setHash('build-'+encode(S.model));return}
+ if(b.dataset.reset){S.cfg[S.model]={...MODELS[S.model].def};save();renderConf();for(const sl of MODELS[S.model].slots)apply(sl.key);applyX();setHash('build-'+encode(S.model));return}
  if(b.dataset.copy){const L=lines(S.model);const code=encode(S.model);
   const t=b.dataset.copy==='list'?MODELS[S.model].n+' – Build-Code '+code+'\n'+L.map(l=>`- ${l[0]}: ${l[2]?'ab ':''}${eur(l[1])}`).join('\n')+`\nGesamt: ${total(L)}`:code;
   const old=b.textContent;try{navigator.clipboard.writeText(t).then(()=>{b.textContent='Kopiert';setTimeout(()=>b.textContent=old,1500)},()=>{b.textContent='Nicht erlaubt'})}catch(err){b.textContent='Nicht erlaubt'}}});
+$('panel').addEventListener('input',e=>{if(e.target.id==='xq'){XQ=e.target.value;renderXList()}else if(e.target.id==='xin'){XIN=e.target.checked;renderXList()}});
 $('views').addEventListener('click',e=>{const b=e.target.closest('[data-view]');if(b)setView(b.dataset.view)});
 $('spin').addEventListener('click',e=>{ctl.autoRotate=!ctl.autoRotate;ctl.autoRotateSpeed=1.2;e.currentTarget.setAttribute('aria-pressed',ctl.autoRotate);
  e.currentTarget.textContent=ctl.autoRotate?'Drehteller aus':'Drehteller an'});
