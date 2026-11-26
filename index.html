@@ -199,12 +199,12 @@ const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const eur=v=>v.toLocaleString('de-AT',{style:'currency',currency:'EUR'});
 const shop=n=>'https://eu.novritsch.com/?s='+encodeURIComponent(n)+'&post_type=product';
 const P='https://eu.novritsch.com/product/';
-const URLS={ssg11:'ssg11-airsoft-sniper-rifle/',mk1:'ssr4-automatic-electric-gun-aeg/',mk2:'ssr4-mk2-automatic-electric-gun/',OPT_4x:'4x40-minimal-scope/',OPT_14:'1-4x-variable-scope/',
+const URLS={ssg10a3:'ssg10-a3-airsoft-sniper-rifle/',ssg96:'ssg96-mk2-airsoft-sniper-rifle/',ssr74:'ssr74-automatic-electric-gun/',ssr9:'ssr9-dsg/',ssq4:'ssq4-hpa-gas-blowback-rifle/',ADAPTER96:'ssg96-suppressor-adapter/',ssg11:'ssg11-airsoft-sniper-rifle/',mk1:'ssr4-automatic-electric-gun-aeg/',mk2:'ssr4-mk2-automatic-electric-gun/',OPT_4x:'4x40-minimal-scope/',OPT_14:'1-4x-variable-scope/',
  OPT_16:'premium-1-6x-variable-scope-mk2/',OPT_rdv3:'red-dot-v3/',OPT_micro:'red-dot-micro-v2/',MUZ_rifle:'novritsch-suppressor/',MUZ_modv1:'modular-suppressor-v1-2/',
  MUZ_fast:'fast-attach-suppressor-system/',MUZ_fdv2:'fast-detach-mock-suppressor-v2/',MUZ_comp:'sniper-rifle-compensator/',BIP_v1:'bipod-v1/',BIP_split:'split-bipod/',
  MAG_long:'ssg11-long-dummy-magazine/',MAG_midcap:'m4-mid-cap-magazine-gen2-225bbs/',ADAPTER:'ssg10-suppressor-adapter/',PACK_ssg11:'ssg11-magazine-58-bbs-triple-pack/',PACK_ssr:'m4-mid-cap-magazine-gen2-225bbs/'};
 const link=(k,n)=>URLS[k]?P+URLS[k]:shop(n);
-const thumb=(k,cls)=>{const i=el('img',cls||'th');i.alt='';i.width=72;i.height=72;i.decoding='async';const f=k==='ssg11'||k==='mk1'||k==='mk2'?'card_'+k+'.jpg':'p_'+k+'.jpg';loadImg(f).then(u=>{if(u)i.src=u;else i.style.visibility='hidden'});return i};
+const thumb=(k,cls)=>{const i=el('img',cls||'th');i.alt='';i.width=72;i.height=72;i.decoding='async';const f=MODELS[k]?'card_'+k+'.jpg':(k==='ADAPTER96'?'p_ADAPTER.jpg':'p_'+k+'.jpg');loadImg(f).then(u=>{if(u)i.src=u;else i.style.visibility='hidden'});return i};
 
 // ---------- Katalog (Richtpreise EU-Shop, Stand 25.11.2026)
 const PART={
@@ -244,7 +244,7 @@ const ssrSlots=(std,mag)=>[
   packs:['M4 Mid-Cap Magazine Gen2 (225 BBs)',19,'Ersatzmagazine (Mid-Cap)','PACK_ssr'],note:mag.note}];
 const MK1F=[1,2,3,4].map(i=>`SSR4_Mk1_${i}.json`),MK2F=[1,2,3,4].map(i=>`SSR4_Mk2_${i}.json`);
 const MODELS={
- ssg11:{n:'SSG11',series:'Sniper',f:'sniper',img:'card_ssg11.jpg',files:['ssg11.json'],floor:-0.182,price:['SSG11 Sniper Rifle',287.20,1],side:1,slots:SSG_SLOTS,
+ ssg11:{n:'SSG11',adapterName:'ssg11',series:'Sniper',f:'sniper',img:'card_ssg11.jpg',files:['ssg11.json'],floor:-0.182,price:['SSG11 Sniper Rifle',287.20,1],side:1,slots:SSG_SLOTS,
   specs:[['Typ','Repetierer'],['Magazin','58 BBs'],['Gewinde','28 mm CCW']],
   off:{},hide:{muzzle:/^(ThreadProtector|Knurl\d|MuzzleCap)/},anch:{optic:[0.06,0.05],muzzle:[0.66,0],detail:[0.02,-0.01]},adapter:true,
   def:{optic:'Scope_3-9x50',muzzle:'none',bipod:'none',mag:'none',packs:0}},
@@ -260,9 +260,30 @@ const MODELS={
   off:{optic:[-0.10125,0.00665],muzzle:[-0.26214,0.000657],bipod:[-0.04368,0.02064]},
   hide:{muzzle:/^Mk2Comp/},anch:{optic:[-0.03,0.06],muzzle:[0.36,0],detail:[0.0,-0.04]},
   def:{optic:'OPT_rdv3',muzzle:'none',bipod:'none',mag:'none',packs:0}},
+ ssg10a3:{n:'SSG10 A3',series:'Sniper',f:'sniper',img:'card_ssg10a3.jpg',files:['SSG10A3_1.json','SSG10A3_2.json'],floor:-0.1582,price:['SSG10 A3 Airsoft Sniper Rifle', 399, 1],side:1,
+  slots:[{key:'optic',title:'Optik',sub:'Picatinny-Schiene',none:['Keine Optik','Offene Schiene.'],from:[0,0.10,0],ids:['Scope_3-9x50','OPT_416','OPT_4x','OPT_14','OPT_16','OPT_rdv3','OPT_micro'],view:'optic',note:'Wird auf der oberen Schiene montiert.'},{key:'muzzle',title:'Mündung',sub:'über Adapter',none:['Gewindeschutz','Standard, im Lieferumfang.'],from:[0.12,0,0],ids:['MUZ_rifle', 'MUZ_modv1', 'MUZ_fast', 'MUZ_fdv2', 'MUZ_comp'],view:'muzzle',note:'Braucht den SSG10/11 Mock Suppressor Adapter (28 CCW → 14 CCW), wird mitgerechnet.'},{key:'bipod',title:'Zweibein',sub:'Unter dem Vorderschaft',none:['Kein Zweibein',''],from:[0,-0.10,0],ids:['BIP_v1'],view:'q34',note:'Bipod V1 an der Schiene/dem Riemenpunkt vorne unter dem Schaft. Passform im Shop prüfen.'}],
+  specs:[['Länge', '105 cm'], ['Gewicht', '2,0 kg'], ['Magazin', '28 BBs']],off:{"optic": [-0.12554, 0.00116], "muzzle": [-0.06513, 0.00066], "bipod": [-0.19736, -0.00883]},hide:{},anch:{"optic": [-0.07554, 0.05982], "detail": [-0.10554, -0.03518], "muzzle": [0.525, 0]},adapter:true,adapterName:'ssg11',
+  def:{optic:'none',muzzle:'none',bipod:'none',mag:'none',packs:0}},
+ ssg96:{n:'SSG96 Mk2',series:'Sniper',f:'sniper',img:'card_ssg96.jpg',files:['SSG96_1.json'],floor:-0.14713,price:['SSG96 Mk2 Airsoft Sniper Rifle', 299, 0],side:1,
+  slots:[{key:'optic',title:'Optik',sub:'Picatinny-Schiene',none:['Keine Optik','Offene Schiene.'],from:[0,0.10,0],ids:['Scope_3-9x50','OPT_416','OPT_4x','OPT_14','OPT_16','OPT_rdv3','OPT_micro'],view:'optic',note:'Wird auf der oberen Schiene montiert.'},{key:'muzzle',title:'Mündung',sub:'über Adapter',none:['Gewindeschutz','Standard, im Lieferumfang.'],from:[0.12,0,0],ids:['MUZ_rifle', 'MUZ_modv1', 'MUZ_fast', 'MUZ_fdv2'],view:'muzzle',note:'Braucht den SSG96 Mock Suppressor Adapter, wird mitgerechnet.'},{key:'bipod',title:'Zweibein',sub:'Unter dem Vorderschaft',none:['Kein Zweibein',''],from:[0,-0.10,0],ids:['BIP_v1'],view:'q34',note:'Bipod V1 an der Schiene/dem Riemenpunkt vorne unter dem Schaft. Passform im Shop prüfen.'},{key:'mag',title:'Magazin',sub:'22 BBs Standard',none:['Standardmagazin','Im Lieferumfang.'],from:[0,-0.08,0],ids:[],view:'side',packs:['SSG96 Magazin (22 BBs)',14,'Ersatzmagazine','PACK_none'],note:'Ersatzmagazine kannst du hier dazunehmen.'}],
+  specs:[['Länge', '108,5 cm'], ['Gewicht', '3,8 kg'], ['Magazin', '22 BBs']],off:{"optic": [-0.17171, -0.00868], "muzzle": [-0.04763, 0.00066], "bipod": [-0.13456, -0.00762]},hide:{},anch:{"optic": [-0.12171, 0.04997], "detail": [-0.15171, -0.04503], "muzzle": [0.5425, 0]},adapter:true,adapterName:'ssg96',
+  def:{optic:'none',muzzle:'none',bipod:'none',mag:'none',packs:0}},
+ ssr74:{n:'SSR74',series:'Gewehr',f:'rifle',img:'card_ssr74.jpg',files:['SSR74_1.json','SSR74_2.json','SSR74_3.json'],floor:-0.22642,price:['SSR74 AEG (Long)', 299, 1],side:1,
+  slots:[{key:'optic',title:'Optik',sub:'Picatinny-Schiene',none:['Keine Optik','Offene Schiene.'],from:[0,0.10,0],ids:['OPT_rdv3','OPT_micro','OPT_14','OPT_16'],view:'optic',note:'Wird auf der oberen Schiene montiert.'},{key:'muzzle',title:'Mündung',sub:'14 mm CCW',none:['Mündungsbremse','Standard, im Lieferumfang.'],from:[0.12,0,0],ids:['MUZ_rifle', 'MUZ_modv1', 'MUZ_fast', 'MUZ_fdv2'],view:'muzzle',note:'14 mm CCW Gewinde: Mock Suppressoren passen direkt, die Mündungsbremse kommt dafür ab.'},{key:'bipod',title:'Zweibein',sub:'M-LOK am Handschutz',none:['Kein Zweibein',''],from:[0,-0.10,0],ids:['BIP_split'],view:'q34',note:'Zwei Einzelbeine, seitlich in die M-LOK-Schlitze geschraubt.'},{key:'mag',title:'Magazin',sub:'200 BBs Standard',none:['Standardmagazin','Im Lieferumfang.'],from:[0,-0.08,0],ids:[],view:'side',packs:['SSR74 Magazin (200 BBs)',15,'Ersatzmagazine','PACK_none'],note:'Ersatzmagazine kannst du hier dazunehmen.'}],
+  specs:[['Länge', '87,6 cm'], ['Gewicht', '3,36 kg'], ['Magazin', '200 BBs']],off:{"optic": [-0.03826, 0.02391], "muzzle": [-0.2222, 0.00066], "bipod": [-0.06954, 0.01295]},hide:{muzzle:/^SSR74Brake/},anch:{"optic": [0.01174, 0.08257], "detail": [-0.01826, -0.01243], "muzzle": [0.37993, 0]},
+  def:{optic:'none',muzzle:'none',bipod:'none',mag:'none',packs:0}},
+ ssr9:{n:'SSR9 DSG',series:'Kompakt',f:'rifle',img:'card_ssr9.jpg',files:['SSR9_1.json'],floor:-0.21232,price:['SSR9 DSG', 289, 0],side:1,
+  slots:[{key:'optic',title:'Optik',sub:'Picatinny-Schiene',none:['Keine Optik','Offene Schiene.'],from:[0,0.10,0],ids:['OPT_rdv3','OPT_micro','OPT_14','OPT_16'],view:'optic',note:'Wird auf der oberen Schiene montiert.'}],
+  specs:[['Länge', '55,2 cm'], ['Gewicht', '1,9 kg'], ['Magazin', '120 BBs']],off:{"optic": [-0.01788, 0.0029]},hide:{},anch:{"optic": [0.03212, 0.06156], "detail": [0.00212, -0.03344], "muzzle": [0.226, 0]},
+  def:{optic:'none',muzzle:'none',bipod:'none',mag:'none',packs:0}},
+ ssq4:{n:'SSQ4',series:'Gewehr · HPA/Gas',f:'rifle',img:'card_ssq4.jpg',files:['SSQ4_1.json','SSQ4_2.json'],floor:-0.17893,price:['SSQ4 HPA/Gas Blowback Rifle', 499, 1],side:1,
+  slots:[{key:'optic',title:'Optik',sub:'Picatinny-Schiene',none:['Keine Optik','Offene Schiene.'],from:[0,0.10,0],ids:['OPT_rdv3','OPT_micro','OPT_14','OPT_16'],view:'optic',note:'Wird auf der oberen Schiene montiert.'},{key:'bipod',title:'Zweibein',sub:'M-LOK am Handschutz',none:['Kein Zweibein',''],from:[0,-0.10,0],ids:['BIP_split'],view:'q34',note:'Zwei Einzelbeine, seitlich in die M-LOK-Schlitze geschraubt.'},{key:'mag',title:'Magazin',sub:'Standardmagazin',none:['Standardmagazin','Im Lieferumfang.'],from:[0,-0.08,0],ids:[],view:'side',packs:['SSQ4 HPA Magazin (125 BBs)',19,'Ersatzmagazine (HPA)','PACK_none'],note:'Ersatzmagazine kannst du hier dazunehmen.'}],
+  specs:[['Länge', '70–78,3 cm'], ['Gewicht', 'ab 2,46 kg'], ['Magazin', '32 / 125 BBs']],off:{"optic": [-0.02615, 0.0036], "bipod": [-0.10111, 0.01916]},hide:{},anch:{"optic": [0.02385, 0.06226], "detail": [-0.00615, -0.03274], "muzzle": [0.3, 0]},
+  def:{optic:'none',muzzle:'none',bipod:'none',mag:'none',packs:0}},
  cmp:{n:'SSR4 Mk1 vs. Mk2',files:[...MK1F,...MK2F],offs:[...MK1F.map(()=>0.17),...MK2F.map(()=>-0.17)],floor:-0.37,side:-1,slots:[],off:{},hide:{},anch:{}}};
-const ORDER=['ssg11','mk1','mk2'];
-const ADAPTER=['SSG10/11 Mock Suppressor Adapter',13];
+const ORDER=['ssg11','ssg10a3','ssg96','mk1','mk2','ssr74','ssq4','ssr9'];
+const CODEORDER=['ssg11','mk1','mk2','ssg10a3','ssg96','ssr74','ssq4','ssr9'];   // feste Reihenfolge für Build-Codes
+const ADAPTERS={ssg11:['SSG10/11 Mock Suppressor Adapter',13,'ADAPTER'],ssg96:['SSG96 Mock Suppressor Adapter',13,'ADAPTER96']};
 const CMP=[['Länge','74 cm (eingeschoben)','73 cm eingeschoben / 81,5 cm ausgezogen'],['Gewicht','2,3 kg','2,38 kg'],
  ['Magazin','140 BBs','225 BBs Mid-Cap'],['Feuerrate','~22 BPS (11,1 V)','~25 BPS (11,1 V)'],['Innenlauf','310 mm, 6,03 mm','310 mm, 6,03 mm'],
  ['Handschutz','M-LOK, Picatinny oben durchgehend','Skelettiert, M-LOK, Schiene nur vorne'],
@@ -282,19 +303,20 @@ const stepsOf=m=>MODELS[m].slots.length?[...MODELS[m].slots.map(s=>s.title),'Zus
 
 // ---------- Build-Code: Modell, 4 Slots, Packs + 2 Prüfzeichen (8 Zeichen)
 const B36='0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-function encode(m){const M=MODELS[m],c=S.cfg[m];const d=[ORDER.indexOf(m),...M.slots.map(s=>['none',...s.ids].indexOf(c[s.key])),c.packs||0];
+const SK=['optic','muzzle','bipod','mag'];const slotOf=(M,k)=>M.slots.find(s=>s.key===k);
+function encode(m){const M=MODELS[m],c=S.cfg[m];const d=[CODEORDER.indexOf(m),...SK.map(k=>{const s=slotOf(M,k);return s?Math.max(0,['none',...s.ids].indexOf(c[k])):0}),c.packs||0];
  let sum=0;d.forEach((v,i)=>sum+=(v+1)*(i+7));return d.map(v=>B36[Math.max(0,v)]).join('')+B36[sum%36]+B36[(sum*7+3)%36]}
 function decode(code){code=(code||'').toUpperCase().replace(/[^0-9A-Z]/g,'');if(code.length!==8)return null;
  const d=[...code.slice(0,6)].map(ch=>B36.indexOf(ch));let sum=0;d.forEach((v,i)=>sum+=(v+1)*(i+7));
  if(code[6]!==B36[sum%36]||code[7]!==B36[(sum*7+3)%36])return null;
- const m=ORDER[d[0]];if(!m)return null;const M=MODELS[m],cfg={packs:Math.min(9,d[5])};
- for(let i=0;i<4;i++){const ids=['none',...M.slots[i].ids];if(d[i+1]>=ids.length)return null;cfg[M.slots[i].key]=ids[d[i+1]]}return {m,cfg}}
+ const m=CODEORDER[d[0]];if(!m)return null;const M=MODELS[m],cfg={packs:Math.min(9,d[5])};
+ for(let i=0;i<4;i++){const sl=slotOf(M,SK[i]);if(!sl){if(d[i+1])return null;cfg[SK[i]]='none';continue}const ids=['none',...sl.ids];if(d[i+1]>=ids.length)return null;cfg[SK[i]]=ids[d[i+1]]}return {m,cfg}}
 
 // ---------- Preise
 function lines(m){const M=MODELS[m];if(m==='cmp')return [[...MODELS.mk1.price,'base','mk1'],[...MODELS.mk2.price,'base','mk2']];
  const cfg=S.cfg[m],L=[[M.price[0],M.price[1],M.price[2],'base',m]];
  for(const sl of M.slots){const id=cfg[sl.key];if(id&&id!=='none'){const [n,p,f]=PART[id];L.push([n,p,f,'opt',id])}}
- if(M.adapter&&cfg.muzzle!=='none')L.push([ADAPTER[0],ADAPTER[1],0,'req','ADAPTER']);
+ if(M.adapter&&cfg.muzzle!=='none'){const A=ADAPTERS[M.adapterName||'ssg11'];L.push([A[0],A[1],0,'req',A[2]])}
  const pk=M.slots.find(s=>s.packs);if(pk&&cfg.packs)L.push([pk.packs[0]+(cfg.packs>1?' × '+cfg.packs:''),pk.packs[1]*cfg.packs,0,'opt',pk.packs[3]]);return L}
 const total=L=>(L.some(l=>l[2])?'ab ':'')+eur(L.reduce((a,l)=>a+l[1],0));
 

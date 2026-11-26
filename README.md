@@ -1,6 +1,6 @@
 # SSR · SSG Konfigurator (Fanprojekt)
 
-Inoffizieller 3D-Konfigurator für Novritsch-Airsoft-Gewehre (SSG11, SSR4 Mk1, SSR4 Mk2) im Stil eines Auto-Konfigurators:
+Inoffizieller 3D-Konfigurator für Novritsch-Airsoft-Gewehre (SSG11, SSG10 A3, SSG96 Mk2, SSR4 Mk1, SSR4 Mk2, SSR74, SSQ4, SSR9 DSG) im Stil eines Auto-Konfigurators:
 Modell wählen, Optik, Mündung, Zweibein und Magazin Schritt für Schritt montieren, am Ende Preisliste und Build-Code.
 
 **Live:** https://puffybooy.github.io/novritsch-konfigurator/
